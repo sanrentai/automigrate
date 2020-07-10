@@ -86,8 +86,10 @@ func (s *DB) Unscoped() *DB {
 
 func (s *DB) clone() *DB {
 	db := &DB{
-		db:    s.db,
-		Value: s.Value,
+		db:      s.db,
+		Error:   s.Error,
+		dialect: newDialect(s.dialect.GetName(), s.db),
+		Value:   s.Value,
 	}
 
 	s.values.Range(func(k, v interface{}) bool {

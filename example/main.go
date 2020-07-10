@@ -1,8 +1,12 @@
 package main
 
 import (
+	"fmt"
+
+	_ "github.com/denisenkom/go-mssqldb"
 	"github.com/gogf/gf/database/gdb"
 	"github.com/sanrentai/automigrate"
+	_ "github.com/sanrentai/automigrate/dialects/mssql"
 )
 
 type MyTest struct {
@@ -32,6 +36,12 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+
+	rs, err := db.GetAll("select * from foo")
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(rs)
 
 	adb := automigrate.NewDB("mssql", db)
 
