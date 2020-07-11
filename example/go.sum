@@ -22,6 +22,8 @@ github.com/olekukonko/tablewriter v0.0.1/go.mod h1:vsDQFd/mU46D+Z4whnwzcISnGGzXW
 github.com/sanrentai/automigrate v0.0.0-20200710014941-1f1a4eec560f h1:Jw9GKrIHtGtj/I2N1kYiz+aWfEQchnhChuWJrVk7Ph0=
 github.com/sanrentai/automigrate v0.0.1 h1:9f++rcXvUx81jPAan/1ypCp1vcF8KcRLZkMSljCUb3k=
 github.com/sanrentai/automigrate v0.0.1/go.mod h1:D/QRsNFELCqSgBrFkTKCjFRgI7klvDXGggzLvu64pxE=
+github.com/sanrentai/automigrate v0.0.2 h1:Cp3Yt8Ee0UFDYYdMUKNPQ1wbRUf8UVpXm5W/koU5I1E=
+github.com/sanrentai/automigrate v0.0.2/go.mod h1:D/QRsNFELCqSgBrFkTKCjFRgI7klvDXGggzLvu64pxE=
 golang.org/x/crypto v0.0.0-20190325154230-a5d413f7728c/go.mod h1:djNgcEr1/C05ACkg1iLfiJU5Ep61QUkGW8qpdssI0+w=
 golang.org/x/sys v0.0.0-20190215142949-d0b11bdaac8a/go.mod h1:STP8DvDyc/dI5b8T5hshtkjS+E42TnysNCUPdjciGhY=
 golang.org/x/sys v0.0.0-20200515095857-1151b9dac4a9/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=

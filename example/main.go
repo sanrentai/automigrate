@@ -1,8 +1,6 @@
 package main
 
 import (
-	"fmt"
-
 	_ "github.com/denisenkom/go-mssqldb"
 	"github.com/gogf/gf/database/gdb"
 	"github.com/sanrentai/automigrate"
@@ -36,12 +34,6 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-
-	rs, err := db.GetAll("select * from foo")
-	if err != nil {
-		panic(err)
-	}
-	fmt.Println(rs)
 
 	adb := automigrate.NewDB("mssql", db)
 
