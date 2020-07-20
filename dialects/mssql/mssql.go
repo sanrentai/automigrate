@@ -122,8 +122,8 @@ func (s mssql) fieldCanAutoIncrement(field *automigrate.StructField) bool {
 }
 
 func (s mssql) HasIndex(tableName string, indexName string) bool {
-	v, _ := s.db.GetValue("SELECT count(*) FROM sys.indexes WHERE name=? AND object_id=OBJECT_ID(?)", indexName, tableName)
-	return v.Int() > 0
+	v, _ := s.db.GetCount("SELECT * FROM sys.indexes WHERE name=? AND object_id=OBJECT_ID(?)", indexName, tableName)
+	return v > 0
 }
 
 func (s mssql) RemoveIndex(tableName string, indexName string) error {
@@ -133,24 +133,24 @@ func (s mssql) RemoveIndex(tableName string, indexName string) error {
 
 func (s mssql) HasForeignKey(tableName string, foreignKeyName string) bool {
 	currentDatabase, tableName := currentDatabaseAndTable(&s, tableName)
-	v, _ := s.db.GetValue(`SELECT count(*) 
+	v, _ := s.db.GetCount(`SELECT *
 	FROM sys.foreign_keys as F inner join sys.tables as T on F.parent_object_id=T.object_id 
 		inner join information_schema.tables as I on I.TABLE_NAME = T.name 
 	WHERE F.name = ? 
 		AND T.Name = ? AND I.TABLE_CATALOG = ?;`, foreignKeyName, tableName, currentDatabase)
-	return v.Int() > 0
+	return v > 0
 }
 
 func (s mssql) HasTable(tableName string) bool {
 	currentDatabase, tableName := currentDatabaseAndTable(&s, tableName)
-	v, _ := s.db.GetValue("SELECT count(*) FROM INFORMATION_SCHEMA.tables WHERE table_name = ? AND table_catalog = ?", tableName, currentDatabase)
-	return v.Int() > 0
+	v, _ := s.db.GetCount("SELECT * FROM INFORMATION_SCHEMA.tables WHERE table_name = ? AND table_catalog = ?", tableName, currentDatabase)
+	return v > 0
 }
 
 func (s mssql) HasColumn(tableName string, columnName string) bool {
 	currentDatabase, tableName := currentDatabaseAndTable(&s, tableName)
-	v, _ := s.db.GetValue("SELECT count(*) FROM information_schema.columns WHERE table_catalog = ? AND table_name = ? AND column_name = ?", currentDatabase, tableName, columnName)
-	return v.Int() > 0
+	v, _ := s.db.GetCount("SELECT * FROM information_schema.columns WHERE table_catalog = ? AND table_name = ? AND column_name = ?", currentDatabase, tableName, columnName)
+	return v > 0
 }
 
 func (s mssql) ModifyColumn(tableName string, columnName string, typ string) error {

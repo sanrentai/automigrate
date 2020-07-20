@@ -103,8 +103,8 @@ func (s *commonDialect) DataTypeOf(field *StructField) string {
 
 func (s commonDialect) HasIndex(tableName string, indexName string) bool {
 	currentDatabase, tableName := currentDatabaseAndTable(&s, tableName)
-	v, _ := s.db.GetValue("SELECT count(*) FROM INFORMATION_SCHEMA.STATISTICS WHERE table_schema = ? AND table_name = ? AND index_name = ?", currentDatabase, tableName, indexName)
-	return v.Int() > 0
+	v, _ := s.db.GetCount("SELECT * FROM INFORMATION_SCHEMA.STATISTICS WHERE table_schema = ? AND table_name = ? AND index_name = ?", currentDatabase, tableName, indexName)
+	return v > 0
 }
 
 func (s commonDialect) RemoveIndex(tableName string, indexName string) error {
@@ -118,14 +118,14 @@ func (s commonDialect) HasForeignKey(tableName string, foreignKeyName string) bo
 
 func (s commonDialect) HasTable(tableName string) bool {
 	currentDatabase, tableName := currentDatabaseAndTable(&s, tableName)
-	v, _ := s.db.GetValue("SELECT count(*) FROM INFORMATION_SCHEMA.TABLES WHERE table_schema = ? AND table_name = ?", currentDatabase, tableName)
-	return v.Int() > 0
+	v, _ := s.db.GetCount("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE table_schema = ? AND table_name = ?", currentDatabase, tableName)
+	return v > 0
 }
 
 func (s commonDialect) HasColumn(tableName string, columnName string) bool {
 	currentDatabase, tableName := currentDatabaseAndTable(&s, tableName)
-	v, _ := s.db.GetValue("SELECT count(*) FROM INFORMATION_SCHEMA.COLUMNS WHERE table_schema = ? AND table_name = ? AND column_name = ?", currentDatabase, tableName, columnName)
-	return v.Int() > 0
+	v, _ := s.db.GetCount("SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE table_schema = ? AND table_name = ? AND column_name = ?", currentDatabase, tableName, columnName)
+	return v > 0
 }
 
 func (s commonDialect) ModifyColumn(tableName string, columnName string, typ string) error {
@@ -134,7 +134,7 @@ func (s commonDialect) ModifyColumn(tableName string, columnName string, typ str
 }
 
 func (s commonDialect) CurrentDatabase() (name string) {
-	v, _ := s.db.GetValue("SELECT DATABASE()")
+	v, _ := s.db.GetValue("SELECT DATABASE() as dbname")
 	name = v.String()
 	return
 }
