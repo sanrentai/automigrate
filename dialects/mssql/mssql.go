@@ -122,9 +122,8 @@ func (s mssql) fieldCanAutoIncrement(field *automigrate.StructField) bool {
 }
 
 func (s mssql) HasIndex(tableName string, indexName string) bool {
-	var count int
-	s.db.GetScan(&count, "SELECT count(*) FROM sys.indexes WHERE name=? AND object_id=OBJECT_ID(?)", indexName, tableName)
-	return count > 0
+	v, _ := s.db.GetValue("SELECT count(*) FROM sys.indexes WHERE name=? AND object_id=OBJECT_ID(?)", indexName, tableName)
+	return v.Int() > 0
 }
 
 func (s mssql) RemoveIndex(tableName string, indexName string) error {
@@ -133,28 +132,25 @@ func (s mssql) RemoveIndex(tableName string, indexName string) error {
 }
 
 func (s mssql) HasForeignKey(tableName string, foreignKeyName string) bool {
-	var count int
 	currentDatabase, tableName := currentDatabaseAndTable(&s, tableName)
-	s.db.GetScan(&count, `SELECT count(*) 
+	v, _ := s.db.GetValue(`SELECT count(*) 
 	FROM sys.foreign_keys as F inner join sys.tables as T on F.parent_object_id=T.object_id 
 		inner join information_schema.tables as I on I.TABLE_NAME = T.name 
 	WHERE F.name = ? 
 		AND T.Name = ? AND I.TABLE_CATALOG = ?;`, foreignKeyName, tableName, currentDatabase)
-	return count > 0
+	return v.Int() > 0
 }
 
 func (s mssql) HasTable(tableName string) bool {
-	var count int
 	currentDatabase, tableName := currentDatabaseAndTable(&s, tableName)
-	s.db.GetScan(&count, "SELECT count(*) FROM INFORMATION_SCHEMA.tables WHERE table_name = ? AND table_catalog = ?", tableName, currentDatabase)
-	return count > 0
+	v, _ := s.db.GetValue("SELECT count(*) FROM INFORMATION_SCHEMA.tables WHERE table_name = ? AND table_catalog = ?", tableName, currentDatabase)
+	return v.Int() > 0
 }
 
 func (s mssql) HasColumn(tableName string, columnName string) bool {
-	var count int
 	currentDatabase, tableName := currentDatabaseAndTable(&s, tableName)
-	s.db.GetScan(&count, "SELECT count(*) FROM information_schema.columns WHERE table_catalog = ? AND table_name = ? AND column_name = ?", currentDatabase, tableName, columnName)
-	return count > 0
+	v, _ := s.db.GetValue("SELECT count(*) FROM information_schema.columns WHERE table_catalog = ? AND table_name = ? AND column_name = ?", currentDatabase, tableName, columnName)
+	return v.Int() > 0
 }
 
 func (s mssql) ModifyColumn(tableName string, columnName string, typ string) error {
@@ -163,7 +159,8 @@ func (s mssql) ModifyColumn(tableName string, columnName string, typ string) err
 }
 
 func (s mssql) CurrentDatabase() (name string) {
-	s.db.GetScan(&name, "SELECT DB_NAME() AS [Current Database]")
+	v, _ := s.db.GetValue("SELECT DB_NAME() AS [Current Database]")
+	name = v.String()
 	return
 }
 
